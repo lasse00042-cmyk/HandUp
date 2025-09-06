@@ -1,0 +1,305 @@
+[
+  {
+    "id": "1a99450f-d458-4423-96c3-08b696546fb3",
+    "name": "lasse",
+    "email": "lasse@ecortex.de",
+    "password": "bf8247aee801280c0f3b48ef124cfeb6dff74264df9425dc601b6666c2f3c510",
+    "subjects": {
+      "Englisch": {
+        "count": 0,
+        "goal": 3
+      },
+      "Mathe": {
+        "count": 0,
+        "goal": 4
+      },
+      "Deutsch": {
+        "count": 0,
+        "goal": 4
+      },
+      "Sport": {
+        "count": 0,
+        "goal": 4
+      }
+    },
+    "history": {
+      "2025-08-27": {
+        "Mathe": 9,
+        "Englisch": 7,
+        "Deutsch": 5
+      },
+      "2025-08-26": {
+        "Mathe": 9,
+        "Englisch": 6,
+        "asd": 0,
+        "Deutsch": 3
+      },
+      "2025-08-25": {
+        "Mathe": 1,
+        "Englisch": 3,
+        "asd": 0,
+        "Deutsch": 4
+      },
+      "2025-08-24": {
+        "Mathe": 1,
+        "Englisch": 3,
+        "asd": 0,
+        "Deutsch": 4
+      },
+      "2025-08-28": {
+        "Mathe": 3,
+        "Englisch": 3,
+        "Deutsch": 2
+      },
+      "2025-08-29": {
+        "Englisch": 4,
+        "Mathe": 7,
+        "Deutsch": 2
+      },
+      "2025-08-30": {
+        "Englisch": 0,
+        "Mathe": 0,
+        "Deutsch": 0
+      },
+      "2025-08-31": {
+        "Englisch": 0,
+        "Mathe": 0,
+        "fghfgh": 3,
+        "fghf": 3,
+        "g": 4,
+        "h": 2,
+        "f": 2,
+        "gh": 3,
+        "fgh": 3,
+        "fg": 3,
+        "fh": 2,
+        "Deutsch": 0
+      },
+      "2025-09-01": {
+        "Englisch": 1,
+        "Mathe": 4,
+        "Deutsch": 2
+      },
+      "2025-09-05": {
+        "Englisch": 2,
+        "Mathe": 1,
+        "Deutsch": 2,
+        "Sport": 1
+      }
+    },
+    "lastActiveDay": "2025-09-05"
+  },
+  {
+    "id": "2978175f-c278-418e-a9ab-f2166c3ee0fe",
+    "name": "Max",
+    "email": "max@test.de",
+    "password": "bf8247aee801280c0f3b48ef124cfeb6dff74264df9425dc601b6666c2f3c510",
+    "subjects": {
+      "Mathe": {
+        "count": 0,
+        "goal": 5
+      },
+      "Deutsch": {
+        "count": 0,
+        "goal": 2
+      },
+      "Englisch": {
+        "count": 0,
+        "goal": 1
+      }
+    },
+    "history": {
+      "2025-08-27": {
+        "Mathe": 0,
+        "Deutsch": 0,
+        "Englisch": 0
+      },
+      "2025-08-28": {
+        "Mathe": 0,
+        "Deutsch": 0,
+        "Englisch": 0
+      },
+      "2025-08-30": {
+        "Mathe": 0,
+        "Deutsch": 0,
+        "Englisch": 0
+      },
+      "2025-08-31": {
+        "Mathe": 0,
+        "Deutsch": 0,
+        "Englisch": 0
+      },
+      "2025-09-01": {
+        "Mathe": 0,
+        "Deutsch": 0,
+        "Englisch": 0
+      }
+    },
+    "lastActiveDay": "2025-09-05"
+  },
+  {
+    "id": "c44830a9-a22c-4e44-900e-671f6a171bc0",
+    "name": "ralf peters",
+    "email": "rp@ecortex.de",
+    "password": "69d19280cedbfda50065d1f6effb2753a3a12a18a39f2bf8d9b4e52802dc3bde",
+    "subjects": {
+      "mathe": {
+        "count": 0,
+        "goal": 4
+      },
+      "deutsch": {
+        "count": 0,
+        "goal": 4
+      }
+    },
+    "history": {
+      "2025-08-27": {
+        "mathe": 0,
+        "deutsch": 0
+      },
+      "2025-08-28": {
+        "mathe": 0,
+        "deutsch": 0
+      },
+      "2025-08-30": {
+        "mathe": 0,
+        "deutsch": 0
+      },
+      "2025-08-31": {
+        "mathe": 0,
+        "deutsch": 0
+      },
+      "2025-09-01": {
+        "mathe": 0,
+        "deutsch": 0
+      }
+    },
+    "lastActiveDay": "2025-09-05"
+  },
+  {
+    "id": "e7e869dc-1b7d-4419-9fb4-acaa6532bbe7",
+    "name": "Lara Peters",
+    "email": "lp@ecortex.de",
+    "password": "79648183530ff7c5bd27b9d110fb17980272a0cfb0c37e31350ed61bcf0d96b7",
+    "subjects": {
+      "esoterik": {
+        "count": 0,
+        "goal": 5
+      },
+      "physik": {
+        "count": 0,
+        "goal": 3
+      },
+      "musik": {
+        "count": 0,
+        "goal": 10
+      },
+      "bio": {
+        "count": 0,
+        "goal": 0
+      }
+    },
+    "history": {
+      "2025-08-28": {
+        "esoterik": 0,
+        "musik": 0,
+        "physik": 0,
+        "bio": 0
+      },
+      "2025-08-30": {
+        "esoterik": 0,
+        "physik": 0,
+        "musik": 0,
+        "bio": 0
+      },
+      "2025-08-31": {
+        "esoterik": 0,
+        "physik": 0,
+        "musik": 0,
+        "bio": 0
+      },
+      "2025-09-01": {
+        "esoterik": 0,
+        "physik": 0,
+        "musik": 0,
+        "bio": 0
+      }
+    },
+    "lastActiveDay": "2025-09-05"
+  },
+  {
+    "id": "8d24f9af-f813-4e81-ae4b-43fddc98d61c",
+    "name": "test",
+    "email": "test@ecortex.de",
+    "password": "bf8247aee801280c0f3b48ef124cfeb6dff74264df9425dc601b6666c2f3c510",
+    "subjects": {},
+    "history": {},
+    "lastActiveDay": "2025-09-05"
+  },
+  {
+    "id": "58423048-a7de-42d9-8620-2d5b7398738b",
+    "name": "tester",
+    "email": "tester@test.de",
+    "password": "bf8247aee801280c0f3b48ef124cfeb6dff74264df9425dc601b6666c2f3c510",
+    "subjects": {
+      "Deutsch": {
+        "count": 0,
+        "goal": 3
+      },
+      "Mathe": {
+        "count": 0,
+        "goal": 4
+      },
+      "Englisch": {
+        "count": 0,
+        "goal": 2
+      }
+    },
+    "history": {
+      "2025-09-05": {
+        "Deutsch": 1,
+        "Mathe": 3,
+        "Englisch": 2,
+        "tester": 0
+      }
+    },
+    "lastActiveDay": "2025-09-05"
+  },
+  {
+    "id": "2b38eeaa-8ddb-40cc-bd42-2b18f2fabf57",
+    "name": "Albert",
+    "email": "albert@einstein.com",
+    "password": "bf8247aee801280c0f3b48ef124cfeb6dff74264df9425dc601b6666c2f3c510",
+    "subjects": {},
+    "history": {},
+    "lastActiveDay": "2025-09-05"
+  },
+  {
+    "id": "31d12832-1894-41e3-8006-79a31cfb8f77",
+    "name": "MAX",
+    "email": "MAX@MAX.com",
+    "password": "bf8247aee801280c0f3b48ef124cfeb6dff74264df9425dc601b6666c2f3c510",
+    "subjects": {
+      "Deutsch": {
+        "count": 0,
+        "goal": 5
+      },
+      "Mathe": {
+        "count": 0,
+        "goal": 3
+      },
+      "Englisch": {
+        "count": 0,
+        "goal": 2
+      }
+    },
+    "history": {
+      "2025-09-05": {
+        "Deutsch": 3,
+        "Mathe": 2,
+        "Englisch": 2
+      }
+    },
+    "lastActiveDay": "2025-09-05"
+  }
+]

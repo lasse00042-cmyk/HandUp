@@ -1,0 +1,730 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="manifest" href="./manifest.json">
+<title>HandUp - Schulfächer</title>
+<style>
+/* Grundlayout */
+body {
+    user-select: none;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    background: #f4f5f9;
+    margin: 0;
+    padding: 20px;
+    user-select: none;
+    overflow-x: hidden;
+    color: #1a1a1a;
+    transition: background 0.3s, color 0.3s;
+}
+
+/* Header mit Userinfo */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+#userInfo { 
+    cursor: pointer; 
+    font-weight: 600; 
+    transition: color 0.2s; 
+}
+#userInfo:hover { color: #6b7bff; }
+
+#userMenu {
+    display: none;
+    position: absolute;
+    top: 36px;
+    right: 0;
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 14px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+    width: 220px;
+    text-align: left;
+    z-index: 100;
+}
+#userMenu button {
+    margin-top: 10px;
+    width: 100%;
+    padding: 8px 0;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+}
+#userMenu button:hover { transform: scale(1.03); }
+#userMenu button:active { transform: scale(0.97); }
+
+/* Dark Mode Anpassung */
+body.dark #userMenu {
+    background: #2c2c2c;
+    color: #f5f5f5;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+}
+#userMenu button {
+    margin-top: 10px;
+    width: 100%;
+    padding: 8px 0;
+    border: none;
+    border-radius: 10px;
+    background: #ff4d4d;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.95em;
+    transition: transform 0.1s, background 0.2s;
+}
+#userMenu button:hover { background: #e04444; }
+#userMenu button:active { transform: scale(0.97); }
+/* Form für neues Fach */
+#addForm {
+    display:flex;
+    gap:14px;
+    align-items:center;
+    max-width:450px;
+    margin-bottom:24px;
+}
+#addForm input[type="text"] {
+    flex:1;
+    padding:12px 16px;
+    border-radius:14px;
+    border:1px solid #ccc;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
+    font-size:1rem;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.3s;
+}
+#addForm input[type="text"]:focus {
+    border-color:#6b7bff;
+    box-shadow:0 0 8px rgba(107,123,255,0.3);
+}
+#addForm button {
+    padding:12px 20px;
+    border:none;
+    border-radius:14px;
+    background:#6b7bff;
+    color:white;
+    font-weight:600;
+    cursor:pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+#addForm button:hover { background:#5865e0; }
+#addForm button:active { transform: scale(0.97); }
+
+/* Fächer-Box */
+.subject {
+    background: #ffffff;
+    margin: 12px 0;
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.2s, box-shadow 0.3s;
+}
+.subject:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
+
+/* Buttons in den Controls */
+.controls button {
+    margin: 0 6px;
+    padding: 6px 14px;
+    border:0;
+    border-radius:8px;
+    font-weight:600;
+    cursor:pointer;
+    transition: all 0.15s;
+}
+.controls button:hover { transform: scale(1.05); }
+.controls button:active { transform: scale(0.95); }
+.controls button.delete { background:#ff4d4d; color:white; }
+.controls button:not(.delete) { background:#6b7bff; color:white; }
+
+/* Progress Bar */
+.progress-bar {
+    height: 14px;
+    border-radius: 8px;
+    background: #e0e0e0;
+    overflow: hidden;
+    margin-top: 6px;
+}
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s, background 0.3s;
+}
+
+/* Historische Meldungen */
+#calendar {
+    display: flex;
+    flex-direction: row;
+    gap: 14px;
+    overflow-x: auto;
+    margin-top: 24px;
+    padding-bottom: 12px;
+    scroll-snap-type: x mandatory;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.day {
+    margin-top: 10px;
+    background: #eaeaea;
+    padding: 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    min-width: 150px;
+    flex-shrink: 0;
+    text-align: center;
+    scroll-snap-align: start;
+    transition: background 0.2s, transform 0.2s;
+}
+.day:hover { background: #c8c8ff; transform: scale(1.04); }
+.day.today { background-color: #ff9500; color: white; }
+.dayDetails {
+    display: none;
+    margin-top: 8px;
+    background: #fff;
+    padding: 8px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    text-align: left;
+    font-size: 0.95rem;
+}
+.empty { color:#888; font-style:italic; }
+
+/* Chart Container */
+#chartContainer {
+    margin-top:24px;
+    background:white;
+    padding:16px;
+    border-radius:12px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+#todayBtn {
+    margin-top:10px;
+    cursor:pointer;
+    color:#6b7bff;
+    font-weight:600;
+    text-decoration:underline;
+    display:none;
+}
+
+/* Goal Input */
+.goal-input {
+  width: 70px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  text-align: center;
+  font-size: 0.9rem;
+  transition: border-color 0.2s, background 0.3s, color 0.3s;
+}
+.goal-input:focus {
+  border-color: #6b7bff;
+  outline: none;
+  box-shadow: 0 0 6px rgba(107,123,255,0.3);
+}
+
+/* Dark Mode */
+body.dark { background: #181818; color: #e0e0e0; }
+body.dark #userMenu { background: #2c2c2c; color: #f5f5f5; box-shadow: 0 6px 18px rgba(0,0,0,0.5); }
+body.dark #addForm input[type="text"] { background: #2c2c2c; border: 1px solid #555; color: #f5f5f5; }
+body.dark .subject { background: #2c2c2c; color: #f5f5f5; }
+body.dark .day { background: #3a3a3a; color: #f5f5f5; }
+body.dark .day.today { background-color: #ff9500; color: white; }
+body.dark .dayDetails { background:#2c2c2c; color:#f5f5f5; box-shadow:0 4px 12px rgba(0,0,0,0.5); }
+body.dark .empty { color:#aaa; }
+body.dark #chartContainer { background:#2c2c2c; color:#f5f5f5; }
+body.dark #calendar {background-color: #2c2c2c; box-shadow: 0 4px 12px rgba(0,0,0,0.4);}
+
+/* Modal */
+.modal {
+  position: fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background: rgba(0,0,0,0.5);
+  display:flex; justify-content:center; align-items:center;
+}
+.hidden { display:none; }
+.modal-content {
+  background: white;
+  color:black;
+  padding:24px;
+  border-radius:16px;
+  min-width:280px;
+  text-align:center;
+  transition: background 0.3s, color 0.3s, transform 0.3s;
+  transform: translateY(-10px);
+}
+.modal.show .modal-content { transform: translateY(0); }
+body.dark .modal-content { background:#2c2c2c; color:#f5f5f5; }
+
+/* Settings Button */
+#topbar {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+}
+#settingsBtn {
+  background: #6b7bff;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+#settingsBtn:hover { background:#5865e0; transform: scale(1.05); }
+#settingsBtn:active { transform: scale(0.97); }
+
+
+
+
+/* --------------------------------- */
+/* Mobile Optimierungen (Responsive) */
+/* --------------------------------- */
+@media (max-width: 600px) {
+
+  body {
+    padding: 12px;
+    font-size: 0.95rem;
+  }
+
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+#userInfoContainer {
+        width: 100%;
+        position: relative; /* sicherstellen, dass UserMenu relativ ist */
+        text-align: left;
+    }
+
+
+
+
+
+  #addForm {
+    flex-direction: column;
+    gap: 10px;
+    max-width: 100%;
+  }
+
+  #addForm input[type="text"] {
+    width: 100%;
+    font-size: 0.95rem;
+  }
+
+  #addForm button {
+    width: 100%;
+  }
+
+  .subject {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .goal-input {
+    width: 60px;
+  }
+
+  #calendar {
+    gap: 10px;
+  }
+
+  .day {
+    min-width: 120px;
+    padding: 10px;
+    font-size: 0.85rem;
+  }
+
+  #chartContainer {
+    padding: 12px;
+  }
+
+  .modal-content {
+    width: 90%;
+    padding: 20px;
+  }
+
+  #topbar {
+    top: 10px;
+    right: 10px;
+  }
+
+  #settingsBtn {
+    padding: 6px 10px;
+    font-size: 0.9rem;
+  }
+}
+
+
+
+
+</style>
+</head>
+<body>
+
+<header>
+    <h1>Meine Schulfächer</h1>
+    <div id="userInfoContainer" style="position: relative; text-align: right;">
+        <span id="userInfo"></span><br>
+        <span id="currentDateTime" style="font-size:0.9em;color:#555;"></span>
+        <div id="userMenu">
+            <div><strong id="popupName"></strong></div>
+            <div id="popupEmail" style="font-size:0.85em; color:#555;"></div>
+           <button id="settingsBtn" style="background-color: #6b7bff;">⚙️ Settings</button>
+            <button id="statsBtn" style="background-color: #ff8800;">📊 Statistiken</button>
+            <button id="logoutBtn">Logout</button>
+        </div>
+    </div>
+</header>
+
+<form id="addForm">
+    <input type="text" id="subjectName" placeholder="Neues Fach">
+    <button type="submit">Hinzufügen</button>
+</form>
+
+<div id="subjects"></div>
+
+<div id="chartContainer">
+    <canvas id="progressChart" height="100"></canvas>
+    <div id="todayBtn">← Zurück zu Heute</div>
+</div>
+
+<h2>Verlauf</h2>
+<div id="calendar"></div>
+
+<div id="settingsModal" class="modal hidden">
+  <div class="modal-content">
+    <h2>Settings</h2>
+    <label><input type="radio" name="theme" value="light"> Light Mode</label><br>
+    <label><input type="radio" name="theme" value="dark"> Dark Mode</label><br><br>
+    <button id="closeModal">Schließen</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// ------------- Service Worker ----------------
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js")
+      .then(reg => console.log("Service Worker registriert", reg))
+      .catch(err => console.error("Service Worker Fehler", err));
+  });
+}
+
+// ------------- User Setup -------------------
+const userId = localStorage.getItem('userId');
+const userName = localStorage.getItem('userName');
+const userEmail = localStorage.getItem('userEmail') || '';
+if(!userId){ alert('Bitte zuerst einloggen'); location.href='/login.html'; }
+
+const userInfo = document.getElementById('userInfo');
+const userMenu = document.getElementById('userMenu');
+const logoutBtn = document.getElementById('logoutBtn');
+const popupName = document.getElementById('popupName');
+const popupEmail = document.getElementById('popupEmail');
+
+async function fetchUserData() {
+    try {
+        const res = await fetch('/user?id=' + encodeURIComponent(userId));
+        if(!res.ok) throw new Error('Fehler beim Laden der Userdaten');
+        const data = await res.json();
+        popupName.textContent = data.name || userName;
+        popupEmail.textContent = data.email || 'Keine E-Mail gespeichert';
+        userInfo.textContent = `Eingeloggt als: ${data.name || userName}`;
+    } catch(err) {
+        console.error(err);
+        popupName.textContent = userName;
+        popupEmail.textContent = userEmail || 'Keine E-Mail gespeichert';
+        userInfo.textContent = `Eingeloggt als: ${userName}`;
+    }
+}
+fetchUserData();
+
+// Datum & Uhrzeit
+const dateTimeSpan = document.getElementById('currentDateTime');
+function updateDateTime() {
+    const now = new Date();
+    dateTimeSpan.textContent = now.toLocaleDateString('de-DE') + ' ' + now.toLocaleTimeString('de-DE');
+}
+updateDateTime();
+setInterval(updateDateTime,1000);
+
+// Popup toggle
+userInfo.addEventListener('click', ()=>{ 
+    userMenu.style.display = userMenu.style.display==='none'?'block':'none';
+});
+document.addEventListener('click', e=>{
+    if(!userInfo.contains(e.target) && !userMenu.contains(e.target)) userMenu.style.display='none';
+});
+logoutBtn.addEventListener('click', ()=>{
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userEmail');
+    location.href='/login.html';
+});
+
+// Escape ID
+function escapeId(s){ return s.replace(/[^a-z0-9_\-]/gi,'_'); }
+
+// ------------- Chart Setup -------------------
+let currentSubjects = {};
+let chart;
+function getColor(count,goal){
+    if(goal<=0) return '#ccc';
+    if(count<goal) return '#ff6666';
+    if(count===goal) return '#66cc66';
+    return '#6666ff';
+}
+function renderChart(subjects){
+    const labels = Object.keys(subjects);
+    const data = labels.map(name=>subjects[name].count);
+    const goals = labels.map(name=>subjects[name].goal);
+    if(!chart){
+        const ctx = document.getElementById('progressChart').getContext('2d');
+        chart = new Chart(ctx,{
+            type:'bar',
+            data:{
+                labels,
+                datasets:[
+                    {label:'Meldungen', data, backgroundColor: labels.map(name=>getColor(subjects[name].count,subjects[name].goal))},
+                    {label:'Ziel', data:goals, type:'line', borderColor:'#888', borderWidth:2, fill:false, tension:0.2}
+                ]
+            },
+            options:{ responsive:true, plugins:{legend:{display:true}} }
+        });
+    } else {
+        chart.data.labels = labels;
+        chart.data.datasets[0].data = data;
+        chart.data.datasets[0].backgroundColor = labels.map(name=>getColor(subjects[name].count,subjects[name].goal));
+        chart.data.datasets[1].data = goals;
+        chart.update();
+    }
+}
+
+// ------------------- Render Subjects -------------------
+function renderSubjects(subjects){
+    currentSubjects = JSON.parse(JSON.stringify(subjects));
+    const container = document.getElementById('subjects');
+    container.innerHTML='';
+    const keys = Object.keys(subjects||{});
+    if(keys.length===0){
+        container.innerHTML='<div class="empty">Noch keine Fächer. Füge doch welche hinzu!</div>';
+        return;
+    }
+
+    for(const name of keys){
+        const obj = subjects[name];
+        const div = document.createElement('div'); div.className='subject';
+
+        const progressContainer = document.createElement('div');
+        progressContainer.innerHTML = `<strong>${name}</strong> — Meldungen: <strong id="count-${escapeId(name)}">${obj.count}</strong>`;
+        const progressBar = document.createElement('div'); progressBar.className='progress-bar';
+        const progressFill = document.createElement('div'); progressFill.className='progress-fill';
+        const pct = obj.goal>0 ? Math.min(obj.count/obj.goal*100,100) : 0;
+        progressFill.style.width = pct+'%';
+        progressFill.style.background = getColor(obj.count,obj.goal);
+        progressBar.appendChild(progressFill);
+        progressContainer.appendChild(progressBar);
+
+        const controls = document.createElement('div'); controls.className='controls';
+        const minus = document.createElement('button'); minus.textContent='-1';
+        minus.addEventListener('click',()=>updateSubject(name,-1));
+        const plus = document.createElement('button'); plus.textContent='+1';
+        plus.addEventListener('click',()=>updateSubject(name,1));
+        const delBtn = document.createElement('button'); delBtn.textContent='Löschen'; delBtn.className='delete';
+        delBtn.addEventListener('click', async ()=>{
+            if(!confirm(`Fach "${name}" wirklich löschen?`)) return;
+            try{
+                const res = await fetch('/subjects/delete', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id:userId,subject:name})});
+                if(!res.ok) throw new Error('Fehler beim Löschen');
+                await fetchSubjects();
+            } catch(err){ console.error(err); }
+        });
+        const renameBtn = document.createElement('button'); renameBtn.textContent='Umbenennen';
+        renameBtn.addEventListener('click', async ()=>{
+            const newName = prompt('Neuer Name für das Fach:', name);
+            if(!newName || newName.trim()===name) return;
+            try{
+                const res = await fetch('/subjects/rename', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id:userId, oldName:name, newName:newName.trim()})});
+                if(!res.ok) throw new Error('Fehler beim Umbenennen');
+                await fetchSubjects();
+            } catch(err){ console.error(err); }
+        });
+
+        const goalInput = document.createElement('input'); goalInput.type='number'; goalInput.className="goal-input"; goalInput.min=0; goalInput.value=obj.goal||0; goalInput.style.width='70px';
+        goalInput.addEventListener('change',()=>updateGoal(name,goalInput.value));
+        const goalWrap = document.createElement('div'); goalWrap.style.display='inline-block'; goalWrap.style.marginLeft='8px';
+        goalWrap.innerHTML='Ziel: '; goalWrap.appendChild(goalInput);
+
+        controls.appendChild(minus); 
+        controls.appendChild(plus); 
+        controls.appendChild(delBtn); 
+        controls.appendChild(renameBtn);  
+        controls.appendChild(goalWrap);
+
+        div.appendChild(progressContainer); 
+        div.appendChild(controls);
+        container.appendChild(div);
+    }
+
+    renderChart(subjects);
+}
+
+// ------------------- Fetch + Update -------------------
+async function fetchSubjects(){
+    try{
+        const res = await fetch('/subjects?id='+encodeURIComponent(userId));
+        if(!res.ok) throw new Error('Fehler beim Laden');
+        const data = await res.json();
+        renderSubjects(data.subjects||{});
+        renderHistory(data.history||{},data.subjects||{});
+    }catch(err){ console.error(err); }
+}
+async function addSubject(name){
+    try{
+        const res = await fetch('/subjects/add',{method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id:userId,subject:name})});
+        if(!res.ok) throw new Error('Fehler beim Hinzufügen');
+        await fetchSubjects();
+    }catch(err){ console.error(err); }
+}
+async function updateSubject(subject,delta){
+    try{
+        const res = await fetch('/subjects/update',{method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id:userId,subject,delta})});
+        if(!res.ok) throw new Error('Fehler beim Aktualisieren');
+        await fetchSubjects();
+    }catch(err){ console.error(err); }
+}
+async function updateGoal(subject,goal){
+    try{
+        const res = await fetch('/subjects/goal',{method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id:userId,subject,goal:Number(goal)})});
+        if(!res.ok) throw new Error('Fehler beim Speichern des Ziels');
+        await fetchSubjects();
+    }catch(err){ console.error(err); }
+}
+
+// Form Submit
+document.getElementById('addForm').addEventListener('submit', e=>{
+    e.preventDefault();
+    const name = document.getElementById('subjectName').value.trim();
+    if(!name) return;
+    addSubject(name);
+    document.getElementById('subjectName').value='';
+});
+
+// ------------------- Historische Meldungen -------------------
+function renderHistory(history,subjects){
+    const calendar=document.getElementById('calendar');
+    calendar.innerHTML='';
+    const days = Object.keys(history||{}).sort().reverse();
+    if(days.length===0){ calendar.innerHTML='<div class="empty">Ziemlich leer hier...</div>'; return; }
+
+    const todayBtn = document.getElementById('todayBtn');
+    todayBtn.style.display='none';
+    todayBtn.onclick = ()=>{ renderChart(currentSubjects); todayBtn.style.display='none'; };
+
+    const weekdayNames = ['So','Mo','Di','Mi','Do','Fr','Sa'];
+    const todayStr = new Date().toISOString().slice(0,10);
+
+    for(const day of days){
+        const dateObj = new Date(day);
+        const dayOfWeek = dateObj.getDay();
+        if(dayOfWeek===0 || dayOfWeek===6) continue; // Samstag & Sonntag überspringen
+
+        const subjectsForDay = history[day]||{};
+        const dayDiv = document.createElement('div'); dayDiv.className='day';
+        if(day===todayStr) dayDiv.classList.add('today');
+        dayDiv.textContent = weekdayNames[dayOfWeek] + ' — ' + day; // Datum hinzufügen
+        const detailsDiv = document.createElement('div'); detailsDiv.className='dayDetails';
+
+        let visibleCount = 0;
+        for(const [name,count] of Object.entries(subjectsForDay)){
+            if(Number(count)===0) continue;
+            visibleCount++;
+            const goal = subjects[name]?.goal || 0;
+            let color='black';
+            if(goal>0){ if(count<goal) color='red'; else if(count===goal) color='green'; else color='blue'; }
+            const line = document.createElement('div');
+            line.textContent = `${name}: ${count} (Ziel: ${goal})`;
+            line.style.color=color;
+            detailsDiv.appendChild(line);
+        }
+        if(visibleCount===0){ const hint=document.createElement('div'); hint.className='empty'; hint.textContent='Keine Meldungen an diesem Tag'; detailsDiv.appendChild(hint); }
+        detailsDiv.style.display='none'; dayDiv.appendChild(detailsDiv);
+
+        dayDiv.addEventListener('click', ()=>{
+            detailsDiv.style.display = detailsDiv.style.display==='none'?'block':'none';
+            const daySubjects = {};
+            for(const [name,count] of Object.entries(subjectsForDay)){
+                const goal = subjects[name]?.goal || 0;
+                daySubjects[name] = { count, goal };
+            }
+            renderChart(daySubjects);
+            todayBtn.style.display='block';
+        });
+
+        calendar.appendChild(dayDiv);
+    }
+}
+
+// ------------------- SETTINGS MODAL -------------------
+const settingsBtn = document.getElementById("settingsBtn");
+const modal = document.getElementById("settingsModal");
+const closeModal = document.getElementById("closeModal");
+const themeRadios = document.querySelectorAll("input[name='theme']");
+settingsBtn.addEventListener("click", ()=> modal.classList.remove("hidden"));
+closeModal.addEventListener("click", ()=> modal.classList.add("hidden"));
+themeRadios.forEach(radio=>{
+  radio.addEventListener("change", ()=>{
+    if(radio.value==="dark") {
+      document.body.classList.add("dark");
+      localStorage.setItem("theme","dark");
+    } else {
+      document.body.classList.remove("dark");
+      localStorage.setItem("theme","light");
+    }
+  });
+});
+const savedTheme = localStorage.getItem("theme");
+if (savedTheme === "dark") {
+  document.body.classList.add("dark");
+  document.querySelector("input[value='dark']").checked = true;
+} else if (savedTheme === "light") {
+  document.body.classList.remove("dark");
+  document.querySelector("input[value='light']").checked = true;
+} else {
+  // Kein gespeichertes Theme → Dark Mode standardmäßig
+  document.body.classList.add("dark");
+  document.querySelector("input[value='dark']").checked = true;
+  localStorage.setItem("theme", "dark");
+}
+
+document.getElementById('statsBtn').addEventListener('click', () => {
+    window.location.href = '/stats.html';
+});
+
+// Initial Fetch + Auto-Update
+fetchSubjects();
+setInterval(fetchSubjects, 15000);
+</script>
+
+</body>
+</html>

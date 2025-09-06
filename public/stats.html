@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HandUp – Statistiken</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="manifest" href="./manifest.json">
+
+<style>
+/* ----------------- Grundstil ----------------- */
+body {
+    user-select: none;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f2f5;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+    transition: background 0.3s, color 0.3s;
+}
+body.dark {
+    background: #121212;
+    color: #e0e0e0;
+}
+
+/* Header mit Userinfo */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+#userInfo { 
+    cursor: pointer; 
+    font-weight: 600; 
+    transition: color 0.2s; 
+}
+#userInfo:hover { color: #6b7bff; }
+
+#userMenu {
+    display: none;
+    position: absolute;
+    top: 36px;
+    right: 0;
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 14px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+    width: 220px;
+    text-align: left;
+    z-index: 100;
+}
+#userMenu button {
+    margin-top: 10px;
+    width: 100%;
+    padding: 8px 0;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+}
+#userMenu button:hover { transform: scale(1.03); }
+#userMenu button:active { transform: scale(0.97); }
+
+/* Dark Mode Anpassung */
+body.dark #userMenu {
+    background: #2c2c2c;
+    color: #f5f5f5;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+}
+#userMenu button {
+    margin-top: 10px;
+    width: 100%;
+    padding: 8px 0;
+    border: none;
+    border-radius: 10px;
+    background: #ff4d4d;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.95em;
+    transition: transform 0.1s, background 0.2s;
+}
+#userMenu button:hover { background: #e04444; }
+#userMenu button:active { transform: scale(0.97); }
+
+/* ----------------- Buttons ----------------- */
+#settingsBtn {
+    background: #4b6cf7;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+#settingsBtn:hover { background: #3a55d6; }
+
+/* ----------------- Stats Container ----------------- */
+#statsContainer {
+    max-width: 900px;
+    margin: auto;
+}
+.statBox {
+    background: #ffffff;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    transition: background 0.3s, color 0.3s;
+}
+body.dark .statBox {
+    background: #1e1e1e;
+    color: #e0e0e0;
+}
+.statBox h2 {
+    margin-top: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+/* ----------------- Motivation ----------------- */
+#motivation {
+    text-align: center;
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    color: #4b6cf7;
+    font-weight: 600;
+}
+body.dark #motivation { color: #7a8fff; }
+
+/* ----------------- Canvas ----------------- */
+canvas {
+    width: 100%;
+    height: 220px;
+}
+
+/* ----------------- Woche Buttons ----------------- */
+.weekButtons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+.weekButtons button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 12px;
+    background: #4b6cf7;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.95em;
+    transition: transform 0.1s, background 0.2s;
+}
+.weekButtons button:hover { background: #3a55d6; }
+.weekButtons button:active { transform: scale(0.97); }
+
+/* ----------------- Modal ----------------- */
+.modal {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.hidden { display: none; }
+.modal-content {
+    background: #ffffff;
+    color: #333;
+    padding: 25px;
+    border-radius: 15px;
+    min-width: 280px;
+    text-align: center;
+    transition: background 0.3s, color 0.3s;
+}
+body.dark .modal-content {
+    background: #1e1e1e;
+    color: #e0e0e0;
+}
+
+/* ----------------- Info Stats ----------------- */
+.infoStat {
+    font-size: 1rem;
+    text-align: center;
+    margin-top: 6px;
+    padding: 10px;
+    border-radius: 12px;
+    flex: 1;
+    min-width: 150px;
+    color: white;
+}
+.infoStat span { font-weight: 600; color: #4b6cf7; }
+body.dark .infoStat span { color: #7a8fff; }
+
+/* ----------------- Farbpalette für Wochenstatistiken ----------------- */
+.infoStat.bg-primary { background: #4b6cf7; }
+.infoStat.bg-secondary { background: #888888; }
+.infoStat.bg-max { background: #4b6cf7; }
+.infoStat.bg-min { background: #ff8800; }
+</style>
+
+</head>
+
+<body>
+<header>
+    <h1>Statistiken</h1>
+    <div id="userInfoContainer" style="position: relative; text-align: right;">
+        <span id="userInfo"></span><br>
+        <span id="currentDateTime" style="font-size:0.9em;color:#555;"></span>
+        <div id="userMenu">
+            <div><strong id="popupName"></strong></div>
+            <div id="popupEmail" style="font-size:0.85em; color:#555;"></div>
+            <button id="settingsBtn" style="background-color: #6b7bff;">⚙️ Settings</button>
+            <button id="backBtn" style="background-color: #ff8800;">📚 Schulfächer</button>
+            <button id="logoutBtn">Logout</button>
+        </div>
+    </div>
+</header>
+
+<div id="statsContainer">
+    <div id="motivation">Lass uns diese Woche volle Power geben! 🚀</div>
+
+    <div class="statBox">
+        <h2>Deine aktuelle Streak 🔥</h2>
+        <div id="streak" style="font-size:1.8rem; text-align:center; color:#6b7bff;"></div>
+    </div>
+
+    <div class="statBox">
+        <h2>
+            Wöchentliche Aktivität
+            <span id="weekRange" style="font-size:0.8em; font-weight:normal; color:#555;"></span>
+        </h2>
+        <canvas id="weekChart"></canvas>
+        <div class="weekButtons">
+            <button id="prevWeek">← Vorherige Woche</button>
+            <button id="currentWeekBtn" class="hidden" style="background:#ff8800;">Zur aktuellen Woche ↩️</button>
+            <button id="nextWeek">Nächste Woche →</button>
+        </div>
+        <div id="weekSummary" class="infoStat" style="display:flex; flex-wrap:wrap; justify-content:center;"></div>
+    </div>
+</div>
+
+<div id="settingsModal" class="modal hidden">
+    <div class="modal-content">
+        <h2>Einstellungen</h2>
+        <label><input type="radio" name="theme" value="light"> Light Mode</label><br>
+        <label><input type="radio" name="theme" value="dark"> Dark Mode</label><br><br>
+        <button id="closeModal">Schließen</button>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// ----------------- User Info -----------------
+const userId = localStorage.getItem('userId');
+const userName = localStorage.getItem('userName');
+const userEmail = localStorage.getItem('userEmail') || '';
+
+if(!userId){ alert('Bitte zuerst einloggen'); location.href='/login.html'; }
+
+const userInfo = document.getElementById('userInfo');
+const userMenu = document.getElementById('userMenu');
+const popupName = document.getElementById('popupName');
+const popupEmail = document.getElementById('popupEmail');
+const logoutBtn = document.getElementById('logoutBtn');
+
+async function fetchUserData(){
+    try {
+        const res = await fetch('/user?id=' + encodeURIComponent(userId));
+        if(!res.ok) throw new Error('Fehler beim Laden der Userdaten');
+        const data = await res.json();
+        popupName.textContent = data.name || userName;
+        popupEmail.textContent = data.email || userEmail || 'Keine E-Mail gespeichert';
+        userInfo.textContent = `Eingeloggt als: ${data.name || userName}`;
+    } catch(err){
+        console.error(err);
+        popupName.textContent = userName;
+        popupEmail.textContent = userEmail || 'Keine E-Mail gespeichert';
+        userInfo.textContent = `Eingeloggt als: ${userName}`;
+    }
+}
+fetchUserData();
+
+// ----------------- Uhrzeit -----------------
+const dateTimeSpan = document.getElementById('currentDateTime');
+function updateDateTime(){
+    const now = new Date();
+    dateTimeSpan.textContent = now.toLocaleDateString('de-DE') + ' ' + now.toLocaleTimeString('de-DE');
+}
+updateDateTime();
+setInterval(updateDateTime,1000);
+
+// ----------------- Menü & Logout -----------------
+userInfo.addEventListener('click', ()=> userMenu.style.display = userMenu.style.display==='none'?'block':'none');
+document.addEventListener('click', e => {
+    if(!userInfo.contains(e.target) && !userMenu.contains(e.target)) userMenu.style.display='none';
+});
+logoutBtn.addEventListener('click', ()=>{
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userEmail');
+    location.href='/login.html';
+});
+
+// ----------------- Theme -----------------
+const settingsBtn = document.getElementById("settingsBtn");
+const modal = document.getElementById("settingsModal");
+const closeModal = document.getElementById("closeModal");
+const themeRadios = document.querySelectorAll("input[name='theme']");
+
+settingsBtn.addEventListener("click", ()=> modal.classList.remove("hidden"));
+closeModal.addEventListener("click", ()=> modal.classList.add("hidden"));
+
+themeRadios.forEach(radio => {
+    radio.addEventListener("change", ()=> {
+        document.body.classList.toggle("dark", radio.value==="dark");
+        localStorage.setItem("theme", radio.value);
+    });
+});
+
+const savedTheme = localStorage.getItem("theme");
+if (savedTheme === "dark") {
+  document.body.classList.add("dark");
+  document.querySelector("input[value='dark']").checked = true;
+} else if (savedTheme === "light") {
+  document.body.classList.remove("dark");
+  document.querySelector("input[value='light']").checked = true;
+} else {
+  // Kein gespeichertes Theme → Dark Mode standardmäßig
+  document.body.classList.add("dark");
+  document.querySelector("input[value='dark']").checked = true;
+  localStorage.setItem("theme", "dark");
+}
+
+// ----------------- Woche Chart -----------------
+let weekChart;
+let currentOffset = 0;
+
+document.getElementById('prevWeek').addEventListener('click', ()=>{ currentOffset--; loadStats(currentOffset); });
+document.getElementById('nextWeek').addEventListener('click', ()=>{ currentOffset++; loadStats(currentOffset); });
+document.getElementById('currentWeekBtn').addEventListener('click', ()=>{ currentOffset=0; loadStats(currentOffset); });
+
+const currentDayHighlight = {
+    id: 'currentDayHighlight',
+    beforeDatasetsDraw: chart => {
+        const { ctx, chartArea: { top, height } } = chart;
+        ctx.save();
+        const today = new Date();
+        const todayDayName = today.toLocaleDateString('de-DE', { weekday: 'short' }).substring(0,2);
+        const idx = chart.data.labels.findIndex(l=>l.startsWith(todayDayName));
+        if(idx!==-1 && chart.getDatasetMeta(0).data[idx]){
+            const bar = chart.getDatasetMeta(0).data[idx];
+            ctx.fillStyle = 'rgba(150,150,150,0.2)';
+            ctx.fillRect(bar.x - bar.width/2, top, bar.width, height);
+        }
+        ctx.restore();
+    }
+};
+
+// ----------------- Stats laden -----------------
+async function loadStats(offset=0){
+    try{
+        const res = await fetch(`/stats?id=${userId}&offset=${offset}`);
+        if(!res.ok) throw new Error('Fehler beim Laden der Statistiken');
+        const data = await res.json();
+
+        const weekdays = ['So','Mo','Di','Mi','Do','Fr','Sa'];
+        const filteredLabels = [], filteredValues = [], filteredDates = [];
+
+        data.week.labels.forEach((d,i)=>{
+            const date = new Date(d);
+            const day = date.getDay();
+            if(day>=1 && day<=5){
+                filteredLabels.push(weekdays[day]);
+                filteredValues.push(data.week.values[i]);
+                filteredDates.push(d);
+            }
+        });
+
+        const maxVal = Math.max(...filteredValues);
+        const minVal = filteredValues.length>0 ? Math.min(...filteredValues.filter(v=>v>0)) : 0;
+        const maxIndex = filteredValues.indexOf(maxVal);
+        const minIndex = minVal>0 ? filteredValues.indexOf(minVal) : -1;
+        const bgColors = filteredValues.map((v,i)=> i===maxIndex?'#6b7bff': i===minIndex?'#ff8800':'#66cc66');
+
+        const ctx = document.getElementById('weekChart').getContext('2d');
+        if(!weekChart){
+            weekChart = new Chart(ctx,{
+                type:'bar',
+                data:{ labels:filteredLabels, datasets:[{ label:'Meldungen pro Tag', data:filteredValues, backgroundColor:bgColors }] },
+                options:{
+                    responsive:true,
+                    plugins:{
+                        legend:{display:false},
+                        tooltip:{
+                            callbacks:{
+                                title:t=>filteredDates[t[0].dataIndex],
+                                label:t=>`Meldungen: ${t.raw}`
+                            }
+                        }
+                    },
+                    scales:{ y:{beginAtZero:true, precision:0}, x:{grid:{display:false}, categoryPercentage:0.9, barPercentage:1.0} }
+                },
+                plugins:[currentDayHighlight]
+            });
+        } else {
+            weekChart.data.labels = filteredLabels;
+            weekChart.data.datasets[0].data = filteredValues;
+            weekChart.data.datasets[0].backgroundColor = bgColors;
+            weekChart.update();
+        }
+
+        const total = filteredValues.reduce((a,b)=>a+b,0);
+        const avg = filteredValues.length ? (total/filteredValues.length).toFixed(1) : 0;
+
+        const summaryDiv = document.getElementById('weekSummary');
+        summaryDiv.innerHTML = `
+            <div class="infoStat" style="background:#6b7bff;color:white;padding:8px 12px;border-radius:8px;margin:4px;flex:1;min-width:150px;">
+                🔥 Diese Woche insg.: <br><strong>${total}</strong>
+            </div>
+            <div class="infoStat" style="background:#888;color:white;padding:8px 12px;border-radius:8px;margin:4px;flex:1;min-width:150px;">
+                📊 Durchschnitt: <br><strong>${avg}</strong>
+            </div>
+            <div class="infoStat" style="background:#6b7bff;color:white;padding:8px 12px;border-radius:8px;margin:4px;flex:1;min-width:150px;">
+                🏆 Maximal: <br><strong>${filteredLabels[maxIndex]} (${maxVal})</strong>
+            </div>
+            <div class="infoStat" style="background:#ff8800;color:white;padding:8px 12px;border-radius:8px;margin:4px;flex:1;min-width:150px;">
+                ⚠️ Minimal: <br><strong>${minIndex>=0 ? filteredLabels[minIndex]+' ('+minVal+')':'-'}</strong>
+            </div>
+        `;
+
+        document.getElementById('streak').textContent = data.currentStreak || 0;
+
+        const startDate = new Date(filteredDates[0]);
+        const endDate = new Date(filteredDates[filteredDates.length-1]);
+        const formatter = new Intl.DateTimeFormat('de-DE');
+        document.getElementById('weekRange').textContent = `(${formatter.format(startDate)} – ${formatter.format(endDate)})`;
+
+        document.getElementById('currentWeekBtn').classList.toggle('hidden', offset===0);
+
+        const maxToday = filteredValues[filteredValues.length-1] || 0;
+        const mot = document.getElementById('motivation');
+        mot.textContent = maxToday>=5?"Hammer! Heute richtig produktiv! 💪":maxToday>0?"Gut gestartet! Weiter so! ✨":"Heute noch nichts gemacht – los geht's! 🚀";
+
+    } catch(err){ console.error(err); alert('Fehler beim Laden der Statistiken'); }
+}
+
+loadStats();
+setInterval(()=>loadStats(currentOffset), 15000);
+
+// ----------------- Schulfächer -----------------
+document.getElementById('backBtn').addEventListener('click', ()=> window.location.href='/subjects.html');
+</script>
+</body>
+</html>

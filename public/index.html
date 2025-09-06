@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="manifest" href="./manifest.json">
+<title>HandUp - Registrierung</title>
+<style>
+  body {
+    user-select: none;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    margin: 0;
+    font-family: sans-serif;
+    background: #f6f7fb;
+    color: #000;
+    transition: background .3s, color .3s;
+  }
+
+
+/* Einheitliche Input-Felder */
+input {
+  width: 92%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color .2s, background .3s;
+  background: #fff;
+}
+
+input:focus {
+  border-color: #6b7bff;
+  box-shadow: 0 0 6px rgba(107,123,255,0.2);
+}
+
+
+  .card {
+    background: white;
+    width: min(400px, 92vw);
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,.06);
+    position: relative;
+    transition: background .3s, color .3s;
+  }
+
+  h1 {
+    margin: 0 0 16px;
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  form {
+    display: grid;
+    gap: 12px;
+  }
+
+  label {
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  /* Passwort-Wrapper */
+  .password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 50px; /* Platz für Auge + Äffchen */
+}
+
+.toggle-pass {
+  position: absolute;
+  right: 30px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.show-monkey {
+  position: absolute;
+  right: 8px;
+  font-size: 1rem;
+}
+.hidden { display: none; }
+
+  button {
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.2s, background 0.2s, color 0.2s;
+  }
+
+  /* Buttonfarben */
+  .register-btn {
+    background: #6b7aff;
+    color: white;
+  }
+  .register-btn:hover { background: #6b7affaa; }
+
+  .login-btn {
+    background: #6b7aff4d;
+    color: #fff;
+    border: 1px solid #6b7bff;
+  }
+  .login-btn:hover { background: #6b7affa2; color: white; }
+
+  /* Hover-Effekt: leicht größer werden */
+  button:hover { transform: scale(1.05); }
+
+  .msg {
+    margin-top: 8px;
+    font-size: .85rem;
+  }
+  .ok { color: #0a7a30; }
+  .error { color: #b00020; }
+  .muted { color: #68708a; }
+
+  #settingsBtn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding: 6px 10px;
+    border: none;
+    border-radius: 8px;
+    background: #6b7bff;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  /* Modal */
+  .modal {
+    position: fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: rgba(0,0,0,0.5);
+    display:flex; justify-content:center; align-items:center;
+  }
+  .hidden { display:none; }
+  .modal-content {
+    background:white;
+    color:black;
+    padding:20px;
+    border-radius:12px;
+    min-width:260px;
+    text-align:center;
+    transition: background .3s, color .3s;
+  }
+
+  /* Dark Mode */
+  body.dark { background: #1e1e1e; color: #f5f5f5; }
+  body.dark .card { background: #2a2a2a; color: #f5f5f5; }
+  body.dark input { background: #333; color: #f5f5f5; border: 1px solid #555; }
+  body.dark input:focus { border-color: #9aa2ff; }
+  body.dark .modal-content { background:#2a2a2a; color:#f5f5f5; }
+</style>
+</head>
+<body>
+
+<button id="settingsBtn">⚙️ Settings</button>
+
+<div class="card">
+  <h1>Konto erstellen</h1>
+  <form id="regForm">
+    <label for="name">Name</label>
+    <input id="name" name="name" type="text" placeholder="Max Mustermann" required />
+
+    <label for="email">E-Mail</label>
+    <input id="email" name="email" type="email" placeholder="max@example.com" required />
+
+    <label for="password">Passwort</label>
+<div class="password-wrapper">
+  <input id="password" name="password" type="password" placeholder="Passwort" required />
+  <button type="button" class="toggle-pass">👁️</button>
+  <span class="show-monkey hidden">🐵</span>
+</div>
+
+
+    <button type="submit" class="register-btn">Registrieren</button>
+    <button type="button" onclick="location.href='login.html'" class="login-btn">Hab schon einen Account</button>
+
+    <div id="msg" class="msg muted">
+      🔒 Dein Passwort wird verschlüsselt gespeichert.<br>
+      Daten bleiben innerhalb der App und werden nicht weitergegeben.
+    </div>
+  </form>
+</div>
+
+<div id="settingsModal" class="modal hidden">
+  <div class="modal-content">
+    <h2>Theme</h2>
+    <label><input type="radio" name="theme" value="light"> Light Mode</label><br>
+    <label><input type="radio" name="theme" value="dark"> Dark Mode</label><br><br>
+    <button id="closeModal">Schließen</button>
+  </div>
+</div>
+
+<script>
+const form = document.getElementById('regForm');
+const msg = document.getElementById('msg');
+const btn = form.querySelector('button[type="submit"]');
+
+// Nachricht anzeigen
+function setMessage(text, type='') {
+  msg.textContent = text;
+  msg.className = 'msg ' + (type || 'muted');
+}
+
+// Registrierung
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+  setMessage('Sende Daten …');
+  btn.disabled = true;
+  try {
+    const res = await fetch('/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: form.name.value.trim(),
+        email: form.email.value.trim(),
+        password: form.password.value
+      })
+    });
+    const data = await res.json().catch(() => ({}));
+    if(!res.ok) throw new Error(data.error || res.statusText);
+    setMessage('✅ Registrierung erfolgreich!', 'ok');
+    form.reset();
+    window.location.href = '/login.html';
+  } catch(err) {
+    setMessage('❌ ' + (err.message || 'Fehler bei der Registrierung'), 'error');
+  } finally { btn.disabled = false; }
+});
+
+  // Show/Hide Passwort
+  const togglePassBtn = document.querySelector('.toggle-pass');
+  const passwordInput = document.getElementById('password');
+  togglePassBtn.addEventListener('click', () => {
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text';
+      togglePassBtn.textContent = '🙈';
+    } else {
+      passwordInput.type = 'password';
+      togglePassBtn.textContent = '👁️';
+    }
+  });
+// SETTINGS + THEME
+const settingsBtn = document.getElementById('settingsBtn');
+const modal = document.getElementById('settingsModal');
+const closeModal = document.getElementById('closeModal');
+const themeRadios = document.querySelectorAll("input[name='theme']");
+
+settingsBtn.addEventListener("click", ()=>modal.classList.remove("hidden"));
+closeModal.addEventListener("click", ()=>modal.classList.add("hidden"));
+
+themeRadios.forEach(radio => {
+  radio.addEventListener("change", ()=>{
+    if(radio.value==="dark"){ document.body.classList.add("dark"); localStorage.setItem("theme","dark"); }
+    else{ document.body.classList.remove("dark"); localStorage.setItem("theme","light"); }
+  });
+});
+
+const savedTheme = localStorage.getItem("theme");
+if (savedTheme === "dark") {
+  document.body.classList.add("dark");
+  document.querySelector("input[value='dark']").checked = true;
+} else if (savedTheme === "light") {
+  document.body.classList.remove("dark");
+  document.querySelector("input[value='light']").checked = true;
+} else {
+  // Kein gespeichertes Theme → Dark Mode standardmäßig
+  document.body.classList.add("dark");
+  document.querySelector("input[value='dark']").checked = true;
+  localStorage.setItem("theme", "dark");
+}
+</script>
+
+</body>
+</html>

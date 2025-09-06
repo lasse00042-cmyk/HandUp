@@ -1,0 +1,107 @@
+[
+  {
+    "id": "1a99450f-d458-4423-96c3-08b696546fb3",
+    "name": "lasse",
+    "email": "lasse@ecortex.de",
+    "password": "bf8247aee801280c0f3b48ef124cfeb6dff74264df9425dc601b6666c2f3c510",
+    "subjects": {
+      "Mathe": {
+        "count": 0,
+        "goal": 8
+      },
+      "Deutsch": {
+        "count": 0,
+        "goal": 4
+      },
+      "Englisch": {
+        "count": 0,
+        "goal": 3
+      }
+    },
+    "history": {
+      "2025-08-27": {
+        "Mathe": 0,
+        "Deutsch": 0,
+        "Englisch": 0
+      },
+      "2025-08-26": {
+        "Mathe": 9,
+        "Deutsch": 3,
+        "Englisch": 6,
+        "asd": 0
+      },
+      "2025-08-25": {
+        "Mathe": 1,
+        "Deutsch": 4,
+        "Englisch": 3,
+        "asd": 0
+      },
+      "2025-08-28": {
+        "Mathe": 0,
+        "Deutsch": 0,
+        "Englisch": 0
+      }
+    },
+    "lastActiveDay": "2025-08-28"
+  },
+  {
+    "id": "2978175f-c278-418e-a9ab-f2166c3ee0fe",
+    "name": "Max",
+    "email": "max@test.de",
+    "password": "bf8247aee801280c0f3b48ef124cfeb6dff74264df9425dc601b6666c2f3c510",
+    "subjects": {
+      "Mathe": {
+        "count": 0,
+        "goal": 5
+      },
+      "Deutsch": {
+        "count": 0,
+        "goal": 2
+      },
+      "Englisch": {
+        "count": 0,
+        "goal": 1
+      }
+    },
+    "history": {
+      "2025-08-27": {
+        "Mathe": 0,
+        "Deutsch": 0,
+        "Englisch": 0
+      },
+      "2025-08-28": {
+        "Mathe": 0,
+        "Deutsch": 0,
+        "Englisch": 0
+      }
+    },
+    "lastActiveDay": "2025-08-27"
+  },
+  {
+    "id": "c44830a9-a22c-4e44-900e-671f6a171bc0",
+    "name": "ralf peters",
+    "email": "rp@ecortex.de",
+    "password": "69d19280cedbfda50065d1f6effb2753a3a12a18a39f2bf8d9b4e52802dc3bde",
+    "subjects": {
+      "mathe": {
+        "count": 0,
+        "goal": 4
+      },
+      "deutsch": {
+        "count": 0,
+        "goal": 4
+      }
+    },
+    "history": {
+      "2025-08-27": {
+        "mathe": 0,
+        "deutsch": 0
+      },
+      "2025-08-28": {
+        "mathe": 0,
+        "deutsch": 0
+      }
+    },
+    "lastActiveDay": "2025-08-27"
+  }
+]
