@@ -89,59 +89,7 @@
     },
     "lastActiveDay": "2025-09-06"
   },
-  {
-    "id": "2978175f-c278-418e-a9ab-f2166c3ee0fe",
-    "name": "Max",
-    "email": "max@test.de",
-    "password": "bf8247aee801280c0f3b48ef124cfeb6dff74264df9425dc601b6666c2f3c510",
-    "subjects": {
-      "Mathe": {
-        "count": 0,
-        "goal": 5
-      },
-      "Deutsch": {
-        "count": 0,
-        "goal": 2
-      },
-      "Englisch": {
-        "count": 0,
-        "goal": 1
-      }
-    },
-    "history": {
-      "2025-08-27": {
-        "Mathe": 0,
-        "Deutsch": 0,
-        "Englisch": 0
-      },
-      "2025-08-28": {
-        "Mathe": 0,
-        "Deutsch": 0,
-        "Englisch": 0
-      },
-      "2025-08-30": {
-        "Mathe": 0,
-        "Deutsch": 0,
-        "Englisch": 0
-      },
-      "2025-08-31": {
-        "Mathe": 0,
-        "Deutsch": 0,
-        "Englisch": 0
-      },
-      "2025-09-01": {
-        "Mathe": 0,
-        "Deutsch": 0,
-        "Englisch": 0
-      },
-      "2025-09-05": {
-        "Mathe": 0,
-        "Deutsch": 0,
-        "Englisch": 0
-      }
-    },
-    "lastActiveDay": "2025-09-06"
-  },
+
   {
     "id": "c44830a9-a22c-4e44-900e-671f6a171bc0",
     "name": "ralf peters",
