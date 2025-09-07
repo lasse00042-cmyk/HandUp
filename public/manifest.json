@@ -3,7 +3,7 @@
   "short_name": "HandUp",
   "start_url": "./login.html",
   "display": "standalone",
-  "orientation": "portrait",
+  "orientation": "any",
   "background_color": "#ffffff",
   "theme_color": "#000000",
   "icons": [
@@ -20,3 +20,4 @@
   ]
 
 }
+
