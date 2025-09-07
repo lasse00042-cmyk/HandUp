@@ -1,7 +1,7 @@
 {
   "name": "HandUp",
-  "short_name": "App",
-  "start_url": "./index.html",
+  "short_name": "HandUp",
+  "start_url": "./login.html",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#ffffff",
@@ -18,4 +18,5 @@
       "type": "image/png"
     }
   ]
+
 }
